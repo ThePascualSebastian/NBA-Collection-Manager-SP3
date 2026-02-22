@@ -1,95 +1,205 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NBA Player Collection Manager</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
 </head>
-
 <body>
-    <div class="header-container">
-        <img src="images/nbalogo.jpeg" alt="NBA logo" class="logo">
-        <h1>NBA Player Collection Manager</h1>
+
+    <!-- Header -->
+    <header>
+        <div class="header-inner">
+            <div class="logo-group">
+                <img src="images/nbalogo.jpeg" alt="NBA" class="logo" onerror="this.style.display='none'">
+                <div>
+                    <div class="site-title">NBA Collection Manager</div>
+                    <div class="site-subtitle">Solo Project 3 — CPSC 3750</div>
+                </div>
+            </div>
+            <nav>
+                <button class="nav-btn active" id="nav-list">Player List</button>
+                <button class="nav-btn" id="nav-add">+ Add Player</button>
+                <button class="nav-btn" id="nav-stats">Stats</button>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+
+        <!-- ── LIST VIEW ─────────────────────────────────────── -->
+        <section id="list-view">
+
+            <!-- Toolbar -->
+            <div class="toolbar">
+                <div class="search-group">
+                    <input type="text" id="search-input" placeholder="Search by name or team…" autocomplete="off">
+                    <select id="filter-position">
+                        <option value="">All Positions</option>
+                        <option value="PG">PG</option>
+                        <option value="SG">SG</option>
+                        <option value="SF">SF</option>
+                        <option value="PF">PF</option>
+                        <option value="C">C</option>
+                    </select>
+                </div>
+                <div class="sort-group">
+                    <label>Sort by</label>
+                    <select id="sort-by">
+                        <option value="name">Name</option>
+                        <option value="team">Team</option>
+                        <option value="position">Position</option>
+                        <option value="ppg">PPG</option>
+                        <option value="years">Years</option>
+                    </select>
+                    <select id="sort-dir">
+                        <option value="ASC">↑ Asc</option>
+                        <option value="DESC">↓ Desc</option>
+                    </select>
+                    <label>Show</label>
+                    <select id="page-size-select">
+                        <option value="5">5</option>
+                        <option value="10" selected>10</option>
+                        <option value="20">20</option>
+                        <option value="50">50</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Toast -->
+            <div id="toast" class="toast hidden"></div>
+
+            <!-- Cards Grid -->
+            <div id="player-grid" class="player-grid"></div>
+
+            <!-- Empty State -->
+            <div id="empty-state" class="empty-state hidden">
+                <div class="empty-icon">🏀</div>
+                <p>No players found. Try adjusting your search or filters.</p>
+            </div>
+
+            <!-- Pagination -->
+            <div class="pagination">
+                <button id="prev-page" disabled>← Prev</button>
+                <span id="page-info">Page 1 of 1</span>
+                <button id="next-page" disabled>Next →</button>
+            </div>
+
+        </section>
+
+        <!-- ── FORM VIEW ──────────────────────────────────────── -->
+        <section id="form-view" class="hidden">
+            <div class="form-card">
+                <h2 id="form-title">Add Player</h2>
+                <form id="player-form" novalidate>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="name">Player Name <span class="req">*</span></label>
+                            <input type="text" id="name" placeholder="e.g. LeBron James">
+                            <span class="field-error" id="err-name"></span>
+                        </div>
+                        <div class="form-group">
+                            <label for="team">Team <span class="req">*</span></label>
+                            <input type="text" id="team" placeholder="e.g. Lakers">
+                            <span class="field-error" id="err-team"></span>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="position">Position <span class="req">*</span></label>
+                            <select id="position">
+                                <option value="PG">Point Guard (PG)</option>
+                                <option value="SG">Shooting Guard (SG)</option>
+                                <option value="SF">Small Forward (SF)</option>
+                                <option value="PF">Power Forward (PF)</option>
+                                <option value="C">Center (C)</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="ppg">Points Per Game <span class="req">*</span></label>
+                            <input type="number" id="ppg" step="0.1" min="0" max="50" placeholder="0.0">
+                            <span class="field-error" id="err-ppg"></span>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="years">Years in NBA <span class="req">*</span></label>
+                            <input type="number" id="years" min="0" max="25" placeholder="0">
+                            <span class="field-error" id="err-years"></span>
+                        </div>
+                        <div class="form-group">
+                            <label for="image_url">Image URL</label>
+                            <input type="url" id="image_url" placeholder="https://…">
+                            <span class="field-error" id="err-image"></span>
+                        </div>
+                    </div>
+
+                    <!-- Image Preview -->
+                    <div class="image-preview-wrap">
+                        <img id="image-preview" src="" alt="Preview" class="hidden"
+                             onerror="this.classList.add('hidden')">
+                    </div>
+
+                    <div id="form-error" class="form-error hidden"></div>
+                    <div id="form-success" class="form-success hidden"></div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn-primary">Save Player</button>
+                        <button type="button" class="btn-secondary" id="cancel-btn">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </section>
+
+        <!-- ── STATS VIEW ─────────────────────────────────────── -->
+        <section id="stats-view" class="hidden">
+            <h2 class="section-title">Dashboard Stats</h2>
+            <div class="stats-grid">
+                <div class="stat-card accent">
+                    <div class="stat-label">Total Players</div>
+                    <div class="stat-value" id="stat-total">—</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Current Page Size</div>
+                    <div class="stat-value" id="stat-pagesize">—</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Avg Points Per Game</div>
+                    <div class="stat-value" id="stat-avgppg">—</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Avg Years in NBA</div>
+                    <div class="stat-value" id="stat-avgyears">—</div>
+                </div>
+                <div class="stat-card highlight">
+                    <div class="stat-label">Top Scorer</div>
+                    <div class="stat-value" id="stat-top">—</div>
+                </div>
+            </div>
+
+            <h3 class="section-subtitle">Players by Position</h3>
+            <div class="pos-grid" id="pos-grid"></div>
+        </section>
+
+    </main>
+
+    <!-- ── DELETE MODAL ───────────────────────────────────────── -->
+    <div id="delete-modal" class="modal-overlay hidden">
+        <div class="modal">
+            <div class="modal-icon">🗑️</div>
+            <h3>Delete Player?</h3>
+            <p id="modal-player-name">Are you sure?</p>
+            <div class="modal-actions">
+                <button id="confirm-delete" class="btn-danger">Yes, Delete</button>
+                <button id="cancel-delete" class="btn-secondary">Cancel</button>
+            </div>
+        </div>
     </div>
-
-    <nav>
-        <button id="nav-list">Player List</button>
-        <button id="nav-add">Add Player</button>
-        <button id="nav-stats">Stats</button>
-    </nav>
-
-    <!-- List View -->
-    <section id="list-view">
-        <h2>Player List</h2>
-        <table>
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Team</th>
-                    <th>Position</th>
-                    <th>PPG</th>
-                    <th>Years</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody id="player-table"></tbody>
-        </table>
-        
-        <!-- Pagination Controls -->
-        <div id="pagination" class="pagination">
-            <button id="prev-page">Previous</button>
-            <span id="page-info">Page 1 of 1</span>
-            <button id="next-page">Next</button>
-        </div>
-    </section>
-
-    <!-- Form View -->
-    <section id="form-view" class="hidden">
-        <h2 id="form-title">Add Player</h2>
-        <form id="player-form">
-            <input type="hidden" id="player-id">
-
-            <label>Name:</label>
-            <input type="text" id="name" required>
-
-            <label>Team:</label>
-            <input type="text" id="team" required>
-
-            <label>Position:</label>
-            <select id="position" required>
-                <option value="PG">PG</option>
-                <option value="SG">SG</option>
-                <option value="SF">SF</option>
-                <option value="PF">PF</option>
-                <option value="C">C</option>
-            </select>
-
-            <label>Points Per Game:</label>
-            <input type="number" id="ppg" step="0.1" min="0" max="50" required>
-
-            <label>Years in NBA:</label>
-            <input type="number" id="years" min="0" max="25" required>
-
-            <button type="submit">Save</button>
-            <button type="button" onclick="document.getElementById('nav-list').click()">Cancel</button>
-            <p id="form-error" class="error"></p>
-        </form>
-    </section>
-
-    <!-- Stats View -->
-    <section id="stats-view" class="hidden">
-        <h2>Stats</h2>
-        <div class="stats-container">
-            <p id="total-players"></p>
-            <p id="avg-ppg"></p>
-            <div id="position-counts"></div>
-            <p id="avg-years"></p>
-        </div>
-    </section>
 
     <script src="js/app.js"></script>
 </body>
-
 </html>
