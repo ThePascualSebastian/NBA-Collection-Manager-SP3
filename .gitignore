@@ -1,0 +1,22 @@
+# Backend files (stays local on XAMPP)
+backend/
+
+# JSON data files
+*.json
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE files
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# Logs
+*.log
+
+# Temporary files
+*.tmp
+*.temp

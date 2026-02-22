@@ -1,0 +1,276 @@
+body {
+  font-family: Arial, sans-serif;
+  margin: 30px;
+  background-color: #f4f4f4;
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.delete-btn:hover {
+  background-color: #dc3545;
+  color: white;
+}
+
+.edit-btn:hover {
+  background-color: #007bff;
+  color: white;
+}
+
+.header-container {
+  display: flex;           
+  align-items: center;  
+  justify-content: center; 
+  gap: 15px;               
+  margin-bottom: 20px;
+}
+
+.header-container .logo {
+  width: 50px;             
+  height: auto;
+}
+
+h1 {
+  text-align: center;
+  margin: 0;
+}
+
+h2 {
+  text-align: center;
+  color: #333;
+}
+
+nav {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+nav button {
+  margin: 0 5px;
+  padding: 10px 20px;
+  cursor: pointer;
+  background-color: #333;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 14px;
+  transition: background-color 0.3s;
+}
+
+nav button:hover {
+  background-color: #555;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+th,
+td {
+  border: 1px solid #ccc;
+  padding: 12px 8px;
+  text-align: center;
+}
+
+th {
+  background-color: #222;
+  color: white;
+  font-weight: bold;
+}
+
+td button {
+  margin: 0 3px;
+  padding: 6px 12px;
+  cursor: pointer;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  background-color: white;
+  transition: all 0.3s;
+}
+
+section {
+  margin-top: 20px;
+}
+
+.hidden {
+  display: none;
+}
+
+/* Pagination Styles */
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+  margin-top: 20px;
+  padding: 15px;
+  background: white;
+}
+
+.pagination button {
+  padding: 8px 16px;
+  cursor: pointer;
+  background-color: #333;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  transition: background-color 0.3s;
+}
+
+.pagination button:hover:not(:disabled) {
+  background-color: #555;
+}
+
+.pagination button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+#page-info {
+  font-weight: bold;
+  color: #333;
+  min-width: 120px;
+  text-align: center;
+}
+
+/* Form Styles */
+form {
+  background: white;
+  padding: 30px;
+  max-width: 500px;
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  border-radius: 4px;
+}
+
+form label {
+  margin-top: 15px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 5px;
+}
+
+form input,
+form select {
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+form button {
+  margin-top: 20px;
+  padding: 10px;
+  background-color: #333;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.3s;
+}
+
+form button:hover {
+  background-color: #555;
+}
+
+form button[type="button"] {
+  background-color: #6c757d;
+}
+
+form button[type="button"]:hover {
+  background-color: #5a6268;
+}
+
+.error {
+  color: #dc3545;
+  font-size: 14px;
+  margin-top: 10px;
+  text-align: center;
+}
+
+/* Stats Styles */
+.stats-container {
+  background: white;
+  padding: 30px;
+  max-width: 600px;
+  margin: auto;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  border-radius: 4px;
+}
+
+.stats-container p,
+.stats-container div {
+  font-size: 16px;
+  line-height: 1.8;
+  color: #333;
+  margin: 10px 0;
+}
+
+#position-counts {
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 2px solid #eee;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  body {
+    margin: 15px;
+  }
+  
+  .header-container {
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  h1 {
+    font-size: 24px;
+  }
+  
+  nav button {
+    padding: 8px 12px;
+    font-size: 12px;
+  }
+  
+  table {
+    font-size: 12px;
+  }
+  
+  th, td {
+    padding: 8px 4px;
+  }
+  
+  td button {
+    padding: 4px 8px;
+    font-size: 11px;
+  }
+  
+  form {
+    padding: 20px;
+  }
+  
+  .pagination {
+    flex-direction: column;
+    gap: 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  h1 {
+    font-size: 20px;
+  }
+  
+  table {
+    font-size: 10px;
+  }
+  
+  th, td {
+    padding: 6px 2px;
+  }
+}
