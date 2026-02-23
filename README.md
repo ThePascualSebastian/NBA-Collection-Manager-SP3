@@ -13,7 +13,7 @@
 |---|---|
 | Domain | thepascualsebastian.com |
 | Registrar | Namecheap |
-| Nameservers | ns1.infinityfree.com / ns2.infinityfree.com |
+| Nameservers | Cloudflare (see below) |
 
 ---
 
@@ -24,6 +24,31 @@ Custom domain: thepascualsebastian.com (aliased to same htdocs directory)
 
 ---
 
+## CDN & HTTPS Provider
+**Cloudflare** (cloudflare.com) — Free tier
+
+Cloudflare sits between the visitor and InfinityFree, providing:
+- Free HTTPS / SSL (Universal SSL certificate)
+- Automatic HTTP → HTTPS redirect via "Always Use HTTPS"
+- DNS management and caching
+
+### How It Works
+```
+Visitor → Cloudflare (HTTPS) → InfinityFree origin (HTTP)
+```
+SSL mode is set to **Flexible** because InfinityFree's free plan does not support
+end-to-end SSL on custom domains without a paid upgrade. Cloudflare encrypts
+the connection between the visitor and Cloudflare.
+
+### Cloudflare Settings
+| Setting | Value |
+|---|---|
+| SSL/TLS Mode | Flexible |
+| Always Use HTTPS | Enabled |
+| Nameservers | Provided by Cloudflare (set in Namecheap) |
+
+---
+
 ## Tech Stack
 | Layer | Technology |
 |---|---|
@@ -31,6 +56,7 @@ Custom domain: thepascualsebastian.com (aliased to same htdocs directory)
 | Backend | PHP 8 |
 | Database | MySQL (via PDO) |
 | Fonts | Google Fonts (Barlow Condensed, Barlow) |
+| CDN / HTTPS | Cloudflare (Free tier) |
 
 ---
 
@@ -43,7 +69,9 @@ Custom domain: thepascualsebastian.com (aliased to same htdocs directory)
 | Username | if0_41221037 |
 | Hosted by | InfinityFree (same account) |
 
-The database table (`players`) is created automatically on first request if it does not exist. Seed data (30 players) is also inserted automatically if the table is empty.
+The database table (`players`) is created automatically on first request if it
+does not exist. Seed data (30 players) is also inserted automatically if the
+table is empty.
 
 ---
 
@@ -51,6 +79,7 @@ The database table (`players`) is created automatically on first request if it d
 ```
 htdocs/
 ├── index.html          # Main SPA shell
+├── .htaccess           # HTTP → HTTPS redirect rules (backup layer)
 ├── css/
 │   └── style.css       # All styles
 ├── js/
@@ -58,7 +87,7 @@ htdocs/
 ├── images/
 │   └── nbalogo.jpeg    # NBA logo
 └── api/
-    └── index.php       # PHP backend (all routes)
+    └── index.php       # PHP backend (all routes + DB connection)
 ```
 
 ---
@@ -71,7 +100,7 @@ htdocs/
    - FTP Host: provided in InfinityFree control panel
    - FTP User / Password: from control panel
 3. Upload all files from `htdocs/` into the `/htdocs` directory on the server
-4. Set the `DB_PASS` environment variable (see below) OR edit `api/index.php` directly during initial setup
+4. Edit `api/index.php` and fill in your real DB password in the fallback value
 5. Visit your domain — the database table and seed data are created automatically
 
 ### Updating Files
@@ -92,7 +121,8 @@ $pass = getenv('DB_PASS') ?: '';  // Must be set as environment variable
 ```
 
 **The database password is never committed to Git.**  
-Set `DB_PASS` as a server environment variable via InfinityFree's control panel or a `.env` file excluded from version control via `.gitignore`.
+The live server file contains the real password as a fallback value, but that
+file is excluded from version control via `.gitignore`.
 
 `.gitignore` includes:
 ```
@@ -102,9 +132,16 @@ api/.env
 
 ---
 
-## SSL / HTTPS
-SSL is enabled via InfinityFree's free AutoSSL.  
-The site is accessible at `https://thepascualsebastian.com`.
+## SSL / HTTPS Architecture
+
+HTTPS is provided by **Cloudflare**, not InfinityFree directly.
+
+- InfinityFree issued a Let's Encrypt certificate for the domain, but their
+  free plan does not reliably enforce HTTPS redirects via `.htaccess`
+- Cloudflare is configured as the DNS provider (nameservers updated in Namecheap)
+- Cloudflare's "Always Use HTTPS" setting forces all HTTP traffic to HTTPS
+- SSL mode is set to Flexible (Cloudflare ↔ visitor is encrypted)
+- A `.htaccess` file is also present on the server as a secondary redirect layer
 
 ---
 
@@ -122,5 +159,5 @@ The site is accessible at `https://thepascualsebastian.com`.
 - ✅ Stats view: total records, page size, avg PPG, avg years, top scorer, position counts
 - ✅ Responsive design (mobile + desktop)
 - ✅ Graceful empty states and error messages
-- ✅ HTTPS enabled
+- ✅ HTTPS enabled via Cloudflare
 - ✅ Environment variables for secrets
