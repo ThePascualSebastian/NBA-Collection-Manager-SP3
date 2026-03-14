@@ -4,7 +4,7 @@
 ---
 
 ## Live URL
-**https://thepascualsebastian.com**
+**https://nba.thepascualsebastian.com**
 
 ---
 
@@ -13,39 +13,26 @@
 |---|---|
 | Domain | thepascualsebastian.com |
 | Registrar | Namecheap |
-| Nameservers | Cloudflare (see below) |
+| Nameservers | InfinityFree (managed via cPanel) |
 
 ---
 
 ## Hosting Provider
 **InfinityFree** (infinityfree.com) — Free tier  
-Account domain: nbasp3manager.infinityfree.me  
-Custom domain: thepascualsebastian.com (aliased to same htdocs directory)
+Account: if0_41221037  
+Main domain: thepascualsebastian.com (portfolio site)  
+NBA app subdomain: nba.thepascualsebastian.com
 
 ---
 
-## CDN & HTTPS Provider
-**Cloudflare** (cloudflare.com) — Free tier
-
-Cloudflare sits between the visitor and InfinityFree, providing:
-- Free HTTPS / SSL (Universal SSL certificate)
-- Automatic HTTP → HTTPS redirect via "Always Use HTTPS"
-- DNS management and caching
+## HTTPS Provider
+**Let's Encrypt** via InfinityFree — Free SSL certificate  
+Installed directly on the subdomain `nba.thepascualsebastian.com` through the InfinityFree dashboard.
 
 ### How It Works
 ```
-Visitor → Cloudflare (HTTPS) → InfinityFree origin (HTTP)
+Visitor → InfinityFree (HTTPS via Let's Encrypt)
 ```
-SSL mode is set to **Flexible** because InfinityFree's free plan does not support
-end-to-end SSL on custom domains without a paid upgrade. Cloudflare encrypts
-the connection between the visitor and Cloudflare.
-
-### Cloudflare Settings
-| Setting | Value |
-|---|---|
-| SSL/TLS Mode | Flexible |
-| Always Use HTTPS | Enabled |
-| Nameservers | Provided by Cloudflare (set in Namecheap) |
 
 ---
 
@@ -56,7 +43,7 @@ the connection between the visitor and Cloudflare.
 | Backend | PHP 8 |
 | Database | MySQL (via PDO) |
 | Fonts | Google Fonts (Barlow Condensed, Barlow) |
-| CDN / HTTPS | Cloudflare (Free tier) |
+| HTTPS | Let's Encrypt (via InfinityFree) |
 
 ---
 
@@ -79,7 +66,7 @@ table is empty.
 ```
 htdocs/
 ├── index.html          # Main SPA shell
-├── .htaccess           # HTTP → HTTPS redirect rules (backup layer)
+├── .htaccess           # HTTP → HTTPS redirect rules
 ├── css/
 │   └── style.css       # All styles
 ├── js/
@@ -99,7 +86,7 @@ htdocs/
 2. Open **File Manager** or connect via **FTP** (FileZilla recommended)
    - FTP Host: provided in InfinityFree control panel
    - FTP User / Password: from control panel
-3. Upload all files from `htdocs/` into the `/htdocs` directory on the server
+3. Upload all files from `htdocs/` into the `/nba.thepascualsebastian.com/htdocs` directory on the server
 4. Edit `api/index.php` and fill in your real DB password in the fallback value
 5. Visit your domain — the database table and seed data are created automatically
 
@@ -134,14 +121,11 @@ api/.env
 
 ## SSL / HTTPS Architecture
 
-HTTPS is provided by **Cloudflare**, not InfinityFree directly.
+HTTPS is provided by **Let's Encrypt** via InfinityFree's built-in SSL dashboard.
 
-- InfinityFree issued a Let's Encrypt certificate for the domain, but their
-  free plan does not reliably enforce HTTPS redirects via `.htaccess`
-- Cloudflare is configured as the DNS provider (nameservers updated in Namecheap)
-- Cloudflare's "Always Use HTTPS" setting forces all HTTP traffic to HTTPS
-- SSL mode is set to Flexible (Cloudflare ↔ visitor is encrypted)
-- A `.htaccess` file is also present on the server as a secondary redirect layer
+- SSL certificate issued and installed directly through the InfinityFree control panel
+- Certificate auto-renews through InfinityFree
+- No third-party CDN or proxy layer required
 
 ---
 
@@ -159,5 +143,5 @@ HTTPS is provided by **Cloudflare**, not InfinityFree directly.
 - ✅ Stats view: total records, page size, avg PPG, avg years, top scorer, position counts
 - ✅ Responsive design (mobile + desktop)
 - ✅ Graceful empty states and error messages
-- ✅ HTTPS enabled via Cloudflare
+- ✅ HTTPS enabled via Let's Encrypt
 - ✅ Environment variables for secrets
